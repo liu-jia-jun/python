@@ -49,14 +49,11 @@ header = {
 
 }
 
-# 设置请求头信息，设置请求信息,携带数据
+# 设置请求头信息，设置请求信息,携带数据，这样可以是的这次请求更像浏览器发起的请求
 # request = urllib.request.Request(url=url,data=data,headers = header,method="POST")
 request = urllib.request.Request(url=url,headers = header)
 
-
 response = urllib.request.urlopen(request)
-
-
 
 print(response.read().decode("utf-8"))
 
