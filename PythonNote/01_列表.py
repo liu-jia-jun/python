@@ -37,7 +37,7 @@ print("查找元素在列表中的个数",list.count(3))
 # 列表反转,列表排序
 list.reverse() # 反转
 
-list.sort() # 排序
+list.sort() # 排序,注意类型
 
 
 print(list)
@@ -45,3 +45,10 @@ print(list)
 # 循环打印列表
 for  item in list:
     print(item)
+
+# 使用枚举函数，同时拿到列表中的下标和元素内容
+
+mylist = [1, 2, 34, 4, 312, 4312]
+
+for index, value in enumerate(mylist):
+    print(index, value)
