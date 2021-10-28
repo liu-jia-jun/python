@@ -50,5 +50,52 @@ print(bs.a.string)
 print(bs.head.contents)
 print(bs.head.contents[1])
 
+print("============================================================")
+
 # 搜索文档内容
 
+import re
+
+# find_all() 方法搜索文档内容
+# 字符串过滤：会查找与字符串完全匹配的所有内容
+list = bs.find_all("a") # 找出所有的a标签，返回一个列表
+
+
+# 使用正则表达式搜索，使用search() 方法来匹配内容
+list = bs.find_all(re.compile("a"))# 找出所有包含a的标签，eg: a,head,meta 标签等
+
+# keyword 关键字参数，类似与属性与属性值匹配
+list = bs.find_all(id="head")
+list = bs.find_all(href="https://www.baidu.com")# 匹配属性和属性值，返回列表
+
+
+# 方法：传入一个函数，根据函数的要求来搜索
+def name_is_exists(tag):
+    return tag.has_attr("name")
+
+list = bs.find_all(name_is_exists)
+
+
+# limit 限制返回的记录条数
+
+list = bs.find_all("a",limit=3) # 最多返回三条数据
+
+
+# text 参数，一般和正则表达式配合使用
+list = bs.find_all(text = "新闻")
+list = bs.find_all(text = ["新闻","美食"])
+list = bs.find_all(text= re.compile("\d")) # 应用正则表达式来查找包含特定文本的内容（标签里的字符串）
+
+# 通过css选择器来匹配内容
+
+list = bs.select("title")
+
+list = bs.select("#head")
+
+list = bs.select("a[class='bri']")# 通过属性来查找
+
+list = bs.select("head > title") # 通过子标签来查找
+
+
+for item in list:
+    print(item)
