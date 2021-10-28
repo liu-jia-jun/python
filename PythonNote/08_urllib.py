@@ -30,19 +30,19 @@ try:
     print(response.read().decode("utf-8"))
 except urllib.error.URLError as e:
     print("timeout",e)
-'''
-# response 对象输出
+
+# response 输出response对象中的内容
 
 response =  urllib.request.urlopen("http://www.baidu.com")
 # 输出响应体中的信息
 print(response.status)
 print(response.getheader("server"))
-
+'''
 
 # 反爬机制，当我们通过py文件直接去访问网址时是没有带请求头信息的，所以服务器会认定该次访问为爬虫从而禁止访问
 # 解决方法，在访问时添加请求信息
 
-url ="https://www.douban.com"
+url ="https://www.baidu.com"
 
 header = {
 "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36"
