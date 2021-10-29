@@ -38,6 +38,27 @@ def main():
 
 
 
+# 定义全局变量，匹配规则，用于查找想要的内容
+# 定义影片链接规则
+findLink = re.compile(r'<a href="(.*?)">') # 创建正则表达式对象，表示规则（字符串的匹配模式）
+# 定义图片路径规则
+findImgSrc = re.compile(r'<img.*src="(.*?)"',re.S) # re.S 让换行符包含在字符串中
+# 定义影片片名
+findTitle = re.compile(r'<span class="title">(.*)</span>')
+# 影片评分
+findRating = re.compile(r'<span class="rating_num" property="v:average">(.*)</span>')
+# 评价人数
+findJudge = re.compile(r'<span>(\d*)人评价</span>')
+# 影片概况
+findInq = re.compile(r'<span class="inq"(.*)</span>')
+# 影片相关内容
+findBd = re.compile(r'<p class="">(.*)</p>',re.S)
+
+
+
+
+
+
 def saveData(savePath):
     print("saveData")
 
@@ -47,9 +68,18 @@ def saveData(savePath):
 def getData(baseUrl):
     dataList = []
 
-    for i in range(0,10):
-
+    for i in range(0,1):
+        # 得到数据
         html = askURL(baseUrl+str(i*25))
+        # 逐一解析得到的数据
+
+        soup = BeautifulSoup(html,"html.parser")
+
+        for item in soup.find_all('div',class_="item"):
+            item = str(item)
+#             print(item)
+            link = re.findall(findLink,item)
+            print(link)
 
     return dataList
 
@@ -65,7 +95,7 @@ def askURL(url):
     try:
         response = urllib.request.urlopen(request)
         html = response.read().decode("utf-8")
-        print(html)
+#         print(html)
     except urllib.error.URLError as e:
         if hasattr(e,"code"):
             print(e,code)
