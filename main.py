@@ -39,7 +39,7 @@ def main():
 
     # 保存数据
     savePath = "./豆瓣电影Top250.xls"
-    saveData(savePath)
+    saveData(dataList,savePath)
 
 
 
@@ -64,8 +64,22 @@ findBd = re.compile(r'<p class="">(.*?)</p>',re.S)
 
 
 
-def saveData(savePath):
-    print("saveData")
+def saveData(dataList,savePath):
+    print("开始保存...")
+    book = xlwt.Workbook(encoding="utf-8",style_compression=0) # 创建workbook对象
+    sheet = book.add_sheet('豆瓣电影Top250',cell_overwrite_ok=True) # 创建工作表
+    col = ("电影详情链接","图片链接","电影中文名","电影外国名","评分","评价人数","电影概况","相关信息")
+    for i in range(0,8):
+        sheet.write(0,i,col[i])
+    for i in range(0,250):
+        print("第%d条" %i)
+        data = dataList[i]
+        for j in range(0,8):
+            sheet.write(i+1,j,data[j])
+
+
+    book.save(savePath)
+
 
 
 
@@ -73,14 +87,14 @@ def saveData(savePath):
 def getData(baseUrl):
     dataList = []
 
-    for i in range(0,1):
+    for i in range(0,10):
         # 得到数据
         html = askURL(baseUrl+str(i*25))
         # 逐一解析得到的数据
 
         soup = BeautifulSoup(html,"html.parser")
 
-        for item in soup.find_all('div',class_="item",limit=2):
+        for item in soup.find_all('div',class_="item"):
             # data 列表用于保存一部电影的全部信息
             data = []
             item = str(item)
