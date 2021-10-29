@@ -24,7 +24,7 @@ import urllib.request,urllib.error  # 指定URL 用于获取网页数据
 
 import xlwt # 进行excel 操作
 
-import sqlite3 # 进行SQLite 数据库操作
+import pymysql # 进行SQLite 数据库操作
 
 # 程序主方法
 def main():
@@ -33,14 +33,15 @@ def main():
     # 得到并处理数据
     dataList = getData(baseUrl)
 
-    for items in dataList:
-        for item in items:
-            print(item)
+#     for items in dataList:
+#         for item in items:
+#             print(item)
+
 
     # 保存数据
-    savePath = "./豆瓣电影Top250.xls"
-    saveData(dataList,savePath)
-
+    savePath = "./豆瓣电影Top250.xls" # 将数据存储到excel文件，excel文件的存储地址
+#     saveDataInExcel(dataList,savePath)
+    saveDataInDatabase(dataList)
 
 
 # 定义全局变量，匹配规则，用于查找想要的内容
@@ -64,7 +65,7 @@ findBd = re.compile(r'<p class="">(.*?)</p>',re.S)
 
 
 
-def saveData(dataList,savePath):
+def saveDataInExcel(dataList,savePath):
     print("开始保存...")
     book = xlwt.Workbook(encoding="utf-8",style_compression=0) # 创建workbook对象
     sheet = book.add_sheet('豆瓣电影Top250',cell_overwrite_ok=True) # 创建工作表
@@ -76,12 +77,39 @@ def saveData(dataList,savePath):
         data = dataList[i]
         for j in range(0,8):
             sheet.write(i+1,j,data[j])
+    # 保存数据表
+#     book.save(savePath)
 
 
-    book.save(savePath)
+def saveDataInDatabase(dataList):
 
-
-
+    for item in dataList:
+        connection = pymysql.connect(host='localhost',
+                             user='root',
+                             password='root',
+                             db='pythondb',
+                             charset='utf8mb4')
+        sql = '''insert into `movie`(`info_link`,`pic_link`,`cname`,`ename`,`score`,`rated`,`instroduction`,`info`)values('''
+        try:
+            # 获取会话指针
+            with connection.cursor() as cursor:
+                length = len(item)
+                for i in range(0,length):
+                    # 插入语句
+                    # 创建SQL语句
+                    sql =sql +'"' +item[i]+'"'
+                    if(i!=length-1):
+                        sql =sql + ","
+                sql = sql + ")"
+                print(sql)
+                # 执行SQL语句
+                cursor.execute(sql)
+                #提交
+                connection.commit()
+        except Exception as result:
+            print(result)
+        finally:
+            connection.close()
 
 
 def getData(baseUrl):
