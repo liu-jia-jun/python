@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+<body>
+名单
+{% for data in name %}
+    <li>{{ data }}</li>
+{% endfor %}
+任务：
+<table border="1">
+    {% for key,value in task.items() %}
+    <tr>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
+    </tr>
+{% endfor %}
+</table>
+
+</body>
+</html>
