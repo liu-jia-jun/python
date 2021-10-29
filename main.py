@@ -32,6 +32,11 @@ def main():
     baseUrl = "https://movie.douban.com/top250?start="
     # 得到并处理数据
     dataList = getData(baseUrl)
+
+    for items in dataList:
+        for item in items:
+            print(item)
+
     # 保存数据
     savePath = "./豆瓣电影Top250.xls"
     saveData(savePath)
@@ -50,9 +55,9 @@ findRating = re.compile(r'<span class="rating_num" property="v:average">(.*)</sp
 # 评价人数
 findJudge = re.compile(r'<span>(\d*)人评价</span>')
 # 影片概况
-findInq = re.compile(r'<span class="inq"(.*)</span>')
+findInq = re.compile(r'<span class="inq">(.*)</span>')
 # 影片相关内容
-findBd = re.compile(r'<p class="">(.*)</p>',re.S)
+findBd = re.compile(r'<p class="">(.*?)</p>',re.S)
 
 
 
@@ -75,11 +80,46 @@ def getData(baseUrl):
 
         soup = BeautifulSoup(html,"html.parser")
 
-        for item in soup.find_all('div',class_="item"):
+        for item in soup.find_all('div',class_="item",limit=2):
+            # data 列表用于保存一部电影的全部信息
+            data = []
             item = str(item)
 #             print(item)
-            link = re.findall(findLink,item)
-            print(link)
+
+            link = re.findall(findLink,item)[0] # re库用来通过正则表达式查找指定的字符串
+            data.append(link) # 添加链接
+            imgSrc = re.findall(findImgSrc,item)[0]
+            data.append(imgSrc) # 添加图片地址
+            titles = re.findall(findTitle,item) # 影片名可能有两种情况，分情况将影片名进行存储
+            if(len(titles)==2):
+                ctitle = titles[0]
+                data.append(ctitle) # 添加中文名
+                otitle = titles[1].replace("/","") # 将外国影片名中的/ 替换掉
+                data.append(otitle) # 添加外国名
+            else:
+                data.append(titles[0])
+                data.append("") # 当影片没有外国名是，使用空白字符给外国名占位
+
+            rating = re.findall(findRating,item)[0]
+            data.append(rating) # 添加评分
+            judgeNum = re.findall(findJudge,item)[0]
+            data.append(judgeNum) # 添加评价人数
+
+            inq = re.findall(findInq,item)
+            if(len(inq)!= 0):
+                inq = inq[0].replace("。","") # 去掉句号
+                data.append(inq) # 添加概述
+            else:
+                data.append(" ") # 如果电影没有概述时，留空
+
+            bd = re.findall(findBd,item)[0]
+            bd = re.sub("<br(\s+)?/>(\s+)?"," ",bd) # 去掉<br/>
+            bd = re.sub("/"," ",bd) # 去掉 /
+            data.append(bd.strip()) # 去掉前后空格
+
+            dataList.append(data) # 把解析好的电影的数据存放到dataList中，并返回
+
+
 
     return dataList
 
