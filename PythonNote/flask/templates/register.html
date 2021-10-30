@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>表单提交</h1>
+{# url_for 动态获取当前网址，和需要访问的路径进行一个拼接#}
+<form action="{{ url_for("result") }}" method="post">
+    <p>姓名：<input type="text" name="姓名"> </p>
+    <p>年龄：<input type="text" name="年龄"> </p>
+    <p>性别：<input type="text" name="性别"> </p>
+    <p>地址：<input type="text" name="地址"> </p>
+    <p><input type="submit" value="提交"> </p>
+</form>
+</body>
+</html>
