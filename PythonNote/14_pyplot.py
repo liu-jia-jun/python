@@ -8,7 +8,7 @@ import numpy as np
 plt.figure(figsize=(4,4))
 
 # 第二布，绘图
-
+，
 num = np.arange(10)
 plt.plot(np.sin(num))
 plt.plot(np.cos(num))

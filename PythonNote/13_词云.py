@@ -43,7 +43,7 @@ string = ' '.join(cut)
 print(len(string))
 print(string)
 
-img = Image.open(r'./imgs/img1.png') # 打开遮罩图片
+img = Image.open(r'./imgs/img4.jpg') # 打开遮罩图片
 img_array = np.array(img) # 将图片转换成数组
 
 wc = WordCloud(
@@ -63,4 +63,4 @@ plt.axis("off") # 是否显示坐标
 plt.show() # 显示生成的词云图片
 
 # 输出词云图片文件
-plt.savefig(r'./imgs/wordcloud.jpg',dpi=500) # 路径和分辨率
+# plt.savefig(r'./imgs/wordcloud.jpg',dpi=500) # 路径和分辨率
